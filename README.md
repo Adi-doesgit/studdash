@@ -5,16 +5,16 @@ A fully containerized full-stack student dashboard with role-based access, PDF f
 ## 🏗️ Architecture
 
 ```
-┌─────────────┐     ┌─────────────┐     ┌──────────────┐
-│   Frontend   │────▶│   Backend   │────▶│  PostgreSQL  │
+┌──────────────┐     ┌─────────────┐     ┌──────────────┐
+│   Frontend   │───▶│   Backend   │────▶  PostgreSQL  │
 │  (Vite/React)│     │  (Express)  │     │   Database   │
 │   nginx:80   │     │   :5000     │     │    :5432     │
-└─────────────┘     └──────┬──────┘     └──────────────┘
-                           │
-                    ┌──────▼──────┐     ┌──────────────┐
-                    │  Prometheus  │────▶│   Grafana    │
-                    │    :9091     │     │    :3003     │
-                    └─────────────┘     └──────────────┘
+└──────────────┘     └──────┬──────┘     └──────────────┘
+                            │
+                     ┌──────▼──────┐     ┌──────────────┐
+                     │  Prometheus │────▶│   Grafana    │
+                     │    :9091    │     │    :3003     │
+                     └─────────────┘     └──────────────┘
 ```
 
 ## 📋 Tech Stack
