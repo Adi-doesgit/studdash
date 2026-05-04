@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: studdash-frontend:latest
-          imagePullPolicy: IfNotPresent
+          image: adi3901/studdash-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:

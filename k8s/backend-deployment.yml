@@ -18,8 +18,8 @@ spec:
         fsGroup: 1000  # Audit fix #4: make PVC writable by non-root user
       containers:
         - name: backend
-          image: studdash-backend:latest
-          imagePullPolicy: IfNotPresent
+          image: adi3901/studdash-backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:
