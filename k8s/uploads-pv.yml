@@ -1,0 +1,27 @@
+# PersistentVolume + PVC for uploaded files (notes, assignments)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: uploads-pv
+  namespace: studdash
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/studdash/uploads
+  persistentVolumeReclaimPolicy: Retain
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uploads-pvc
+  namespace: studdash
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

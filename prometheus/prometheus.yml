@@ -1,0 +1,21 @@
+# Prometheus Configuration
+# Scrapes the backend /metrics endpoint
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Backend application metrics
+  - job_name: 'studdash-backend'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['backend:5000']
+        labels:
+          app: 'studdash'
+          service: 'backend'
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

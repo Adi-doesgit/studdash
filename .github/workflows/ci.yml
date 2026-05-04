@@ -1,0 +1,119 @@
+# =============================================
+# GitHub Actions CI/CD Pipeline
+# =============================================
+# Triggers on push to main branch
+# Steps: Build, Test, Scan, Push to Docker Hub
+# Deployment: Manual kubectl apply
+# =============================================
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  BACKEND_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/studdash-backend
+  FRONTEND_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/studdash-frontend
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: studdash
+          POSTGRES_PASSWORD: studdash_password
+          POSTGRES_DB: studdash
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 3. Initialize database (audit fix #6)
+      - name: Initialize PostgreSQL database
+        run: PGPASSWORD=studdash_password psql -h localhost -U studdash -d studdash -f backend/src/db/init.sql
+
+      # 4. Install backend dependencies
+      - name: Install backend dependencies
+        run: cd backend && npm install
+
+      # 5. Start backend for testing
+      - name: Start backend for testing
+        run: |
+          cd backend
+          export JWT_SECRET=test-secret
+          export PORT=5000
+          export DB_HOST=localhost
+          export DB_PORT=5432
+          export DB_USER=studdash
+          export DB_PASSWORD=studdash_password
+          export DB_NAME=studdash
+          export UPLOAD_DIR=./test-uploads
+          mkdir -p ./test-uploads/notes ./test-uploads/assignments
+          node src/index.js &
+          sleep 3
+
+      # 6. Run backend tests
+      - name: Run backend tests
+        run: |
+          cd backend
+          export PORT=5000
+          node src/test.js
+
+      # 7. Build Docker images
+      - name: Build backend Docker image
+        run: docker build -t $BACKEND_IMAGE:latest ./backend
+
+      - name: Build frontend Docker image
+        run: docker build -t $FRONTEND_IMAGE:latest ./frontend
+
+      # 8. Trivy security scan
+      - name: Install Trivy
+        run: |
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      - name: Scan backend image with Trivy
+        run: trivy image --exit-code 0 --severity HIGH,CRITICAL $BACKEND_IMAGE:latest
+
+      - name: Scan frontend image with Trivy
+        run: trivy image --exit-code 0 --severity HIGH,CRITICAL $FRONTEND_IMAGE:latest
+
+      # 9. Push to Docker Hub (only on main branch push)
+      - name: Login to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Push backend image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker push $BACKEND_IMAGE:latest
+
+      - name: Push frontend image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker push $FRONTEND_IMAGE:latest
