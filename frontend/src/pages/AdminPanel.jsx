@@ -91,6 +91,33 @@ export default function AdminPanel() {
         </div>
       </div>
 
+      {/* System Metrics — Grafana embed */}
+      <div className="card" id="metrics-section">
+        <h2 className="card-title">📊 System Metrics</h2>
+        <div style={{
+          borderRadius: '12px',
+          overflow: 'hidden',
+          border: '1px solid var(--border-color)',
+          marginBottom: '1rem',
+        }}>
+          <iframe
+            src="http://localhost:3003/d/studdash-backend"
+            title="Grafana Monitoring Dashboard"
+            width="100%"
+            height="500"
+            style={{ border: 'none', borderRadius: '12px', display: 'block', background: 'var(--bg-primary)' }}
+          />
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => window.open('http://localhost:3003', '_blank')}
+          >
+            Open Full Monitoring Dashboard ↗
+          </button>
+        </div>
+      </div>
+
       {/* User management table */}
       <div className="card">
         <h2 className="card-title">
