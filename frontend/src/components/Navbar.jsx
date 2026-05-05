@@ -27,7 +27,8 @@ export default function Navbar() {
       { to: '/assignments', label: 'Assignments' },
     ],
     admin: [
-      { to: '/admin', label: 'User Management' },
+      { to: '/admin', label: 'Admin Panel' },
+      { to: '/admin/metrics', label: 'Metrics' },
     ],
   };
 

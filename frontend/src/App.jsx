@@ -14,6 +14,7 @@ import UploadAssignment from './pages/UploadAssignment';
 import UploadNotes from './pages/UploadNotes';
 import ViewAssignments from './pages/ViewAssignments';
 import AdminPanel from './pages/AdminPanel';
+import AdminMetrics from './pages/AdminMetrics';
 
 /** Protected route — checks auth + optional role */
 function ProtectedRoute({ children, allowedRoles }) {
@@ -115,6 +116,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <AppLayout><AdminPanel /></AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/metrics"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AppLayout><AdminMetrics /></AppLayout>
           </ProtectedRoute>
         }
       />

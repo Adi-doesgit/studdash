@@ -52,19 +52,49 @@ export default function AdminPanel() {
     student: '#10b981',
   };
 
+  const totalUsers = users.length;
+  const activeUsers = users.filter((u) => u.is_active).length;
+  const suspendedUsers = totalUsers - activeUsers;
+
   return (
     <div className="admin-page">
       <div className="page-header">
-        <h1>User Management</h1>
-        <p className="page-subtitle">Manage accounts and access control</p>
+        <h1>Admin Panel</h1>
+        <p className="page-subtitle">Manage users and monitor system health</p>
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
       {message && <div className="alert alert-success">{message}</div>}
 
+      {/* Summary stats */}
+      <div className="stats-grid" style={{ marginBottom: '1.5rem' }}>
+        <div className="stat-card">
+          <span className="stat-icon">👥</span>
+          <div className="stat-info">
+            <span className="stat-number">{totalUsers}</span>
+            <span className="stat-label">Total Users</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <span className="stat-icon">✅</span>
+          <div className="stat-info">
+            <span className="stat-number">{activeUsers}</span>
+            <span className="stat-label">Active</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <span className="stat-icon">🚫</span>
+          <div className="stat-info">
+            <span className="stat-number">{suspendedUsers}</span>
+            <span className="stat-label">Suspended</span>
+          </div>
+        </div>
+      </div>
+
+      {/* User management table */}
       <div className="card">
         <h2 className="card-title">
-          All Users
+          User Management
           <span className="badge">{users.length}</span>
         </h2>
 
