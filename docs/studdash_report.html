@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudDash — Project Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  :root { --primary: #6366f1; --success: #10b981; --danger: #ef4444; --warn: #f59e0b; --bg: #0f172a; --card: #1e293b; --border: #334155; --text: #f1f5f9; --muted: #94a3b8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; padding: 2rem; max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--success)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.4rem; font-weight: 700; color: var(--text); margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 1.1rem; font-weight: 600; color: var(--primary); margin: 1.25rem 0 0.5rem; }
+  p, li { font-size: 0.92rem; color: var(--muted); }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 2rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+  th { text-align: left; padding: 0.6rem 0.8rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 1px solid var(--border); }
+  td { padding: 0.6rem 0.8rem; border-bottom: 1px solid rgba(51,65,85,0.5); color: var(--text); }
+  tr:hover { background: rgba(99,102,241,0.04); }
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: white; }
+  .badge-primary { background: var(--primary); }
+  .badge-success { background: var(--success); }
+  .badge-warn { background: var(--warn); }
+  .badge-danger { background: var(--danger); }
+  code { font-size: 0.82rem; background: rgba(99,102,241,0.1); padding: 0.15rem 0.4rem; border-radius: 4px; color: #818cf8; }
+  pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: 0.82rem; color: var(--muted); margin: 0.75rem 0; }
+  .flow { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+  .flow-step { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--text); }
+  .flow-arrow { color: var(--primary); font-weight: 800; font-size: 1.1rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+  .stat-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+  .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-top: 0.25rem; }
+  ul { padding-left: 1.5rem; margin: 0.5rem 0; }
+  li { margin: 0.3rem 0; }
+  .speaker { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(16,185,129,0.05)); border: 1px solid rgba(99,102,241,0.2); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; }
+  .speaker-name { font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.75rem; }
+  blockquote { border-left: 3px solid var(--primary); padding-left: 1rem; margin: 0.75rem 0; font-style: italic; color: var(--muted); }
+  .page-break { page-break-before: always; }
+  @media print {
+    body { background: white; color: #1a1a1a; padding: 0; max-width: 100%; font-size: 11pt; }
+    .card, .speaker, .stat { border-color: #ddd; background: #fafafa; }
+    h1 { -webkit-text-fill-color: #4338ca; color: #4338ca; }
+    h3 { color: #4338ca; }
+    th { color: #666; border-color: #ddd; }
+    td { color: #333; border-color: #eee; }
+    p, li { color: #444; }
+    code { background: #f0f0f0; color: #4338ca; }
+    pre { background: #f8f8f8; border-color: #ddd; color: #333; }
+    .flow-step { background: #f0f0f0; border-color: #ddd; color: #333; }
+    .speaker { background: #f5f3ff; border-color: #c7d2fe; }
+    .speaker-name { color: #4338ca; }
+    blockquote { color: #555; border-color: #4338ca; }
+    .muted-print { color: #666; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🎓 StudDash — Student Dashboard System</h1>
+<p class="subtitle">Complete Architecture, CI/CD, Tech Stack & Implementation Report</p>
+
+<!-- ==================== SECTION 1 ==================== -->
+<h2>1. 🏗️ Application Architecture</h2>
+
+<h3>1.1 High-Level Request Flow</h3>
+<div class="flow">
+  <span class="flow-step">🌐 Browser</span><span class="flow-arrow">→</span>
+  <span class="flow-step">NGINX Ingress</span><span class="flow-arrow">→</span>
+  <span class="flow-step">Frontend (Nginx+React)</span>
+</div>
+<div class="flow">
+  <span class="flow-step">🌐 Browser</span><span class="flow-arrow">→</span>
+  <span class="flow-step">NGINX Ingress</span><span class="flow-arrow">→</span>
+  <span class="flow-step">Backend (Express)</span><span class="flow-arrow">→</span>
+  <span class="flow-step">PostgreSQL</span>
+</div>
+<div class="flow">
+  <span class="flow-step">Prometheus</span><span class="flow-arrow">→ scrape</span>
+  <span class="flow-step">Backend /metrics</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step">Grafana Dashboard</span>
+</div>
+
+<h3>1.2 Container Architecture (Docker Compose)</h3>
+<div class="card">
+<table>
+  <thead><tr><th>Container</th><th>Image</th><th>Port</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td><code>studdash-frontend</code></td><td>node→nginx:alpine</td><td>3000→80</td><td>Serves React SPA, proxies /api</td></tr>
+    <tr><td><code>studdash-backend</code></td><td>node:20-alpine</td><td>5050→5000</td><td>REST API (Express + JWT)</td></tr>
+    <tr><td><code>studdash-postgres</code></td><td>postgres:16-alpine</td><td>5432</td><td>Database + auto-seeding</td></tr>
+    <tr><td><code>studdash-prometheus</code></td><td>prom/prometheus</td><td>9091→9090</td><td>Metrics scraping (15s interval)</td></tr>
+    <tr><td><code>studdash-grafana</code></td><td>grafana/grafana</td><td>3003→3000</td><td>Dashboard visualization</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>1.3 Kubernetes Components</h3>
+<div class="card">
+<table>
+  <thead><tr><th>Resource</th><th>Manifest</th><th>Details</th></tr></thead>
+  <tbody>
+    <tr><td>Namespace</td><td><code>namespace.yml</code></td><td><code>studdash</code> — isolates all resources</td></tr>
+    <tr><td>Secrets</td><td><code>secrets.yml</code></td><td>DB_USER, DB_PASSWORD, DB_NAME, JWT_SECRET</td></tr>
+    <tr><td>ConfigMap</td><td><code>postgres-deployment.yml</code></td><td>Embeds full init.sql for DB seeding</td></tr>
+    <tr><td>PV + PVC ×2</td><td><code>postgres-pv.yml</code>, <code>uploads-pv.yml</code></td><td>1Gi each — DB data + uploaded files</td></tr>
+    <tr><td>Deployment ×3</td><td>frontend (×2), backend (×2), postgres (×1)</td><td>With resource limits + health probes</td></tr>
+    <tr><td>Service ×3</td><td>ClusterIP</td><td>frontend:80, backend:5000, postgres:5432</td></tr>
+    <tr><td>Ingress</td><td><code>ingress.yml</code></td><td>NGINX, host: studdash.local, 20MB body</td></tr>
+    <tr><td>HPA</td><td><code>hpa.yml</code></td><td>Auto-scales on CPU utilization</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>1.4 Ingress Routing</h3>
+<div class="card">
+<table>
+  <thead><tr><th>Path</th><th>Type</th><th>Target</th><th>Port</th></tr></thead>
+  <tbody>
+    <tr><td><code>/</code></td><td>Prefix</td><td>frontend-service</td><td>80</td></tr>
+    <tr><td><code>/api</code></td><td>Prefix</td><td>backend-service</td><td>5000</td></tr>
+    <tr><td><code>/health</code></td><td>Exact</td><td>backend-service</td><td>5000</td></tr>
+    <tr><td><code>/metrics</code></td><td>Exact</td><td>backend-service</td><td>5000</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ==================== SECTION 2 ==================== -->
+<div class="page-break"></div>
+<h2>2. 🔄 CI/CD Pipeline Workflow</h2>
+
+<h3>Why CI/CD?</h3>
+<ul>
+  <li>Eliminates "works on my machine" problems</li>
+  <li>Automates testing, building, scanning, and publishing</li>
+  <li>Catches security vulnerabilities before deployment</li>
+  <li>Every merge to <code>main</code> produces verified container images</li>
+</ul>
+
+<h3>Pipeline Steps (GitHub Actions)</h3>
+<div class="flow">
+  <span class="flow-step">📝 Push</span><span class="flow-arrow">→</span>
+  <span class="flow-step">📦 Checkout</span><span class="flow-arrow">→</span>
+  <span class="flow-step">⚙️ Setup Node</span><span class="flow-arrow">→</span>
+  <span class="flow-step">🗄️ Init DB</span><span class="flow-arrow">→</span>
+  <span class="flow-step">📥 Install</span><span class="flow-arrow">→</span>
+  <span class="flow-step">🧪 Test</span><span class="flow-arrow">→</span>
+  <span class="flow-step">🐳 Build</span><span class="flow-arrow">→</span>
+  <span class="flow-step">🔒 Trivy Scan</span><span class="flow-arrow">→</span>
+  <span class="flow-step">📤 Push to Hub</span>
+</div>
+
+<div class="card">
+<table>
+  <thead><tr><th>#</th><th>Step</th><th>Tool</th><th>Details</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Trigger</td><td>GitHub Actions</td><td>On push/PR to <code>main</code></td></tr>
+    <tr><td>2</td><td>Checkout</td><td>actions/checkout@v4</td><td>Pull latest source</td></tr>
+    <tr><td>3</td><td>Setup</td><td>actions/setup-node@v4</td><td>Node.js 20</td></tr>
+    <tr><td>4</td><td>Init DB</td><td>PostgreSQL service</td><td>Run init.sql via psql</td></tr>
+    <tr><td>5</td><td>Install</td><td>npm install</td><td>Backend dependencies</td></tr>
+    <tr><td>6</td><td>Test</td><td>node src/test.js</td><td>Integration tests</td></tr>
+    <tr><td>7</td><td>Build</td><td>docker build</td><td>Multi-stage frontend + backend</td></tr>
+    <tr><td>8</td><td>Scan</td><td><strong>Trivy</strong></td><td>HIGH/CRITICAL vulnerability scan</td></tr>
+    <tr><td>9</td><td>Push</td><td>Docker Hub</td><td>Main branch only</td></tr>
+    <tr><td>10</td><td>Deploy</td><td>kubectl apply</td><td>Manual K8s deployment</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ==================== SECTION 3 ==================== -->
+<h2>3. 🧰 Tech Stack</h2>
+<div class="card">
+<table>
+  <thead><tr><th>Category</th><th>Technology</th><th>Details</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-primary">Frontend</span></td><td>React + Vite</td><td>SPA, role-based routing via React Router</td></tr>
+    <tr><td><span class="badge badge-primary">Frontend Server</span></td><td>Nginx Alpine</td><td>Multi-stage build, serves static + proxies API</td></tr>
+    <tr><td><span class="badge badge-success">Backend</span></td><td>Node.js 20 + Express</td><td>REST API, rate limiting, graceful shutdown</td></tr>
+    <tr><td><span class="badge badge-success">Database</span></td><td>PostgreSQL 16</td><td>6 tables, bcrypt passwords, seed data</td></tr>
+    <tr><td><span class="badge badge-warn">Auth</span></td><td>JWT + bcrypt</td><td>Stateless tokens, 10-round hashing</td></tr>
+    <tr><td><span class="badge badge-warn">File Upload</span></td><td>Multer</td><td>PDF-only, 20MB max, disk storage</td></tr>
+    <tr><td><span class="badge badge-danger">Monitoring</span></td><td>Prometheus + Grafana</td><td>Custom counters + histograms, pre-provisioned dashboards</td></tr>
+    <tr><td><span class="badge badge-danger">Containers</span></td><td>Docker + Compose</td><td>Multi-stage builds, bridge network, named volumes</td></tr>
+    <tr><td><span class="badge badge-danger">Orchestration</span></td><td>Kubernetes (Kind)</td><td>Deployments, Services, Ingress, PVCs, HPA</td></tr>
+    <tr><td><span class="badge badge-danger">CI/CD</span></td><td>GitHub Actions</td><td>Build → Test → Scan → Push pipeline</td></tr>
+    <tr><td><span class="badge badge-danger">Security Scan</span></td><td>Trivy</td><td>Container CVE scanning in CI</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ==================== SECTION 4 ==================== -->
+<div class="page-break"></div>
+<h2>4. ⚙️ Implementation Phases</h2>
+
+<h3>Phase 1: Backend Setup</h3>
+<div class="card">
+<pre>backend/src/
+├── index.js         ← Express server + graceful shutdown
+├── config.js        ← Env variable loader
+├── metrics.js       ← Prometheus counters + histograms
+├── db/pool.js       ← PostgreSQL connection pool
+├── db/init.sql      ← Schema + seed data (6 tables)
+├── middleware/
+│   ├── auth.js      ← JWT verification
+│   ├── roles.js     ← RBAC (requireRole)
+│   └── upload.js    ← Multer PDF config
+├── routes/
+│   ├── auth.js      ← POST /login, /register
+│   ├── grades.js    ← GET /grades (student)
+│   ├── notes.js     ← POST/GET (teacher/student)
+│   ├── assignments.js ← POST/GET (student/teacher)
+│   └── admin.js     ← GET/PATCH /admin/users
+└── test.js          ← Integration test suite</pre>
+<p>Middleware chain: <code>authenticate → requireRole → handler</code></p>
+</div>
+
+<h3>Phase 2: Database Schema (PostgreSQL)</h3>
+<div class="card">
+<table>
+  <thead><tr><th>Table</th><th>Key Columns</th><th>Relationships</th></tr></thead>
+  <tbody>
+    <tr><td><strong>users</strong></td><td>id, username, password, name, email, role, is_active</td><td>—</td></tr>
+    <tr><td><strong>subjects</strong></td><td>id, code, name, credits</td><td>—</td></tr>
+    <tr><td><strong>registrations</strong></td><td>student_id, subject_id</td><td>FK → users, subjects</td></tr>
+    <tr><td><strong>grades</strong></td><td>student_id, subject_id, grade</td><td>FK → users, subjects</td></tr>
+    <tr><td><strong>notes</strong></td><td>teacher_id, title, filename, filepath</td><td>FK → users</td></tr>
+    <tr><td><strong>assignments</strong></td><td>student_id, title, filename, filepath</td><td>FK → users</td></tr>
+  </tbody>
+</table>
+<p>Seed data: 1 admin, 1 teacher, 3 students, 7 subjects, sample grades</p>
+</div>
+
+<h3>Phase 3: Frontend Setup</h3>
+<div class="card">
+<pre>frontend/src/
+├── App.jsx           ← Routes + ProtectedRoute + RoleRedirect
+├── App.css           ← Complete design system (770 lines)
+├── api/axios.js      ← Axios + JWT interceptor
+├── context/AuthContext.jsx ← Global auth state
+├── components/Navbar.jsx   ← Role-aware nav
+└── pages/ (9 components)
+    Login, Register, Dashboard, Notes,
+    UploadNotes, UploadAssignment,
+    ViewAssignments, AdminPanel, AdminMetrics</pre>
+<p>Route protection: <code>/dashboard</code> → student | <code>/upload-notes</code> → teacher | <code>/admin</code> → admin</p>
+</div>
+
+<h3>Phase 4–7: Docker → CI/CD → K8s → Monitoring</h3>
+<div class="grid">
+  <div class="stat"><div class="stat-label">Phase 4: Docker</div><div class="stat-value">5</div><p>containers via docker-compose, multi-stage builds, non-root user</p></div>
+  <div class="stat"><div class="stat-label">Phase 5: CI/CD</div><div class="stat-value">9</div><p>pipeline steps in GitHub Actions with Trivy scanning</p></div>
+  <div class="stat"><div class="stat-label">Phase 6: K8s</div><div class="stat-value">9</div><p>manifest files — namespace, secrets, PVCs, deployments, ingress, HPA</p></div>
+  <div class="stat"><div class="stat-label">Phase 7: Monitoring</div><div class="stat-value">2</div><p>tools — Prometheus scraping + Grafana dashboards</p></div>
+</div>
+
+<!-- ==================== SECTION 5 ==================== -->
+<h2>5. 🔐 Security Model</h2>
+<div class="card">
+<table>
+  <thead><tr><th>Layer</th><th>Mechanism</th><th>Implementation</th></tr></thead>
+  <tbody>
+    <tr><td>Passwords</td><td>bcrypt (10 rounds)</td><td>Hashed at registration, compared at login</td></tr>
+    <tr><td>Authentication</td><td>JWT (Bearer)</td><td>Issued at login, verified by auth middleware</td></tr>
+    <tr><td>Authorization</td><td>RBAC middleware</td><td><code>requireRole('admin')</code> blocks non-admin</td></tr>
+    <tr><td>Frontend</td><td>ProtectedRoute</td><td>Checks auth + role before rendering</td></tr>
+    <tr><td>Rate Limiting</td><td>express-rate-limit</td><td>100 req / 15 min per IP</td></tr>
+    <tr><td>Container</td><td>Non-root user</td><td>Backend runs as <code>appuser</code></td></tr>
+    <tr><td>Secrets</td><td>Docker + K8s Secrets</td><td>JWT key never in source code</td></tr>
+    <tr><td>Scanning</td><td>Trivy</td><td>CVE detection in CI pipeline</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ==================== SECTION 6 ==================== -->
+<div class="page-break"></div>
+<h2>6. 🎤 Presentation Speaker Script</h2>
+
+<div class="speaker">
+  <div class="speaker-name">🎙️ Speaker 1 — Product &amp; Frontend Lead</div>
+  <blockquote>"We built StudDash — a minimal, containerized student dashboard. It solves a real problem: universities lack a centralized system for marks, notes, and assignments."</blockquote>
+  <p><strong>Roles:</strong> Admin (manage users + metrics) · Teacher (upload notes, view submissions) · Student (view marks + GPA, upload assignments)</p>
+  <blockquote>"The frontend uses Vite + React with role-based rendering — a student never sees admin routes. Our ProtectedRoute component enforces this."</blockquote>
+  <p><strong>Demo:</strong> Login → Student dashboard (marks + GPA) → Notes → Admin panel (users + Grafana metrics)</p>
+</div>
+
+<div class="speaker">
+  <div class="speaker-name">⚙️ Speaker 2 — Backend API Architect</div>
+  <blockquote>"Our backend has 5 route modules under /api — auth, grades, notes, assignments, and admin. Every protected request passes through a three-layer middleware chain: authenticate (JWT) → requireRole (RBAC) → handler."</blockquote>
+  <p><strong>File uploads:</strong> Multer — PDF only, 20MB max, timestamp-based naming</p>
+  <blockquote>"We handle SIGINT and SIGTERM for graceful shutdown. When Kubernetes terminates a pod, we close HTTP connections, drain the PostgreSQL pool, and exit cleanly."</blockquote>
+</div>
+
+<div class="speaker">
+  <div class="speaker-name">🔐 Speaker 3 — Security &amp; Database Admin</div>
+  <blockquote>"PostgreSQL 16 with 6 normalized tables — users, subjects, registrations, grades, notes, assignments. Foreign keys with CASCADE, unique constraints, CHECK constraints for role validation."</blockquote>
+  <blockquote>"Security at every layer: bcrypt for passwords, JWT for stateless auth, RBAC middleware for access control, non-root containers, and Trivy scanning for CVEs."</blockquote>
+</div>
+
+<div class="speaker">
+  <div class="speaker-name">🐳 Speaker 4 — DevOps Engineer</div>
+  <blockquote>"Multi-stage Docker builds keep images small and secure. docker-compose up --build brings up all 5 services."</blockquote>
+  <blockquote>"Our CI pipeline: install → test → build → Trivy scan → push to Docker Hub. This eliminates 'works on my machine' — every merge produces verified, scanned images."</blockquote>
+</div>
+
+<div class="speaker">
+  <div class="speaker-name">☸️ Speaker 5 — Cloud &amp; Kubernetes Lead</div>
+  <blockquote>"We deploy to a Kind cluster on WSL2. 3 Deployments, 3 ClusterIP Services, NGINX Ingress for routing, 2 PVCs for persistent storage, Kubernetes Secrets, and HPA for auto-scaling."</blockquote>
+  <blockquote>"Backend pods have liveness and readiness probes. Prometheus scrapes metrics every 15s. Grafana displays request rates, latency, and CPU usage."</blockquote>
+</div>
+
+<div class="card" style="text-align:center; margin-top:2rem; background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(16,185,129,0.08)); border-color: rgba(99,102,241,0.3);">
+  <p style="font-size:1rem; font-weight:600; color:var(--text); font-style:italic;">"This system is designed to be minimal yet scalable, combining clean architecture, containerization, and real-time monitoring to deliver a production-like environment."</p>
+</div>
+
+</body>
+</html>
